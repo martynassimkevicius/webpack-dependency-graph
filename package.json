@@ -1,0 +1,42 @@
+{
+  "name": "webpack-dependency-graph",
+  "version": "1.0.0",
+  "description": "Webpack plugin to show code dependencies",
+  "main": "index.js",
+  "scripts": {
+    "runEx": "webpack --config example/webpack.config.js",
+    "runWatchEx": "webpack --watch --config example/webpack.config.js",
+    "run": "webpack --mode development",
+    "runWatch": "webpack --watch --mode development && webpack --watch --mode development --config webpack.node.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martynassimkevicius/webpack-dependency-graph.git"
+  },
+  "author": "Martynas Šimkevičius",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/martynassimkevicius/webpack-dependency-graph/issues"
+  },
+  "homepage": "https://github.com/martynassimkevicius/webpack-dependency-graph#readme",
+  "dependencies": {
+    "d3": "^5.9.7",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "@types/d3": "^5.7.2",
+    "@types/lodash": "^4.14.137",
+    "@types/node": "^12.7.1",
+    "@types/webpack": "^4.32.1",
+    "raw-loader": "^3.1.0",
+    "ts-loader": "^6.0.4",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-node-externals": "^1.7.2",
+    "webpack-shell-plugin": "^0.5.0"
+  }
+}

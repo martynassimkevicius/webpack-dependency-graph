@@ -1,0 +1,40 @@
+{
+    "extends": [
+        "tslint:recommended", "tslint-config-prettier", "tslint-plugin-prettier"
+    ],
+    "rules": {
+        "prettier": [true, { 
+            "singleQuote": true, 
+            "tabWidth": 4, 
+            "arrowParens": "always",
+            "printWidth": 100
+        }],
+        "translation-literal": true,
+        "no-inferrable-types": true,
+        "ordered-imports": false,
+        "cyclomatic-complexity": [true, 25],
+        "no-empty-interface": true,
+        "no-duplicate-super": true,
+        "no-invalid-this": true,
+        "deprecation": true,
+        "no-magic-numbers": true,
+        "max-file-line-count": [
+            true,
+            400
+        ],
+        "interface-name": [true, "never-prefix"],
+        "object-literal-sort-keys": false,
+        "member-access": false,
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-pascal-case",
+            "allow-leading-underscore"
+        ],
+        "no-console": [true, "log", "error"],
+        "one-variable-per-declaration": false,
+        "prefer-for-of": false,
+        "import-path-alias": true
+    }
+}
