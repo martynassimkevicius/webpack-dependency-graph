@@ -2,7 +2,7 @@ import webpack from "webpack";
 import { DataFormat } from './types';
 import fs from 'fs';
 import { generateTemplate } from "./template";
-import jsText from "!!raw-loader!./../dist/graphVisualizer"; 
+import jsText from "!!raw-loader!./../dist/graphVisualizer";
 
 export class DependencyGraphWebpackPlugin implements webpack.Plugin {
 
@@ -33,25 +33,33 @@ export class DependencyGraphWebpackPlugin implements webpack.Plugin {
         }, { nodes: [], links: [] });
         result.nodes = this.removeDuplicates(result.nodes, 'id');
         // result.links = this.removeDuplicatesByCoupleKeys(result.links, 'source', 'target');
-        this.showDependencyGraph(result);
-        callback();
+        this.showDependencyGraph(result, callback);
     }
 
-    showDependencyGraph(data: DataFormat) {
+    showDependencyGraph(data: DataFormat, callback: () => void) {
         //console.log(filename);
         const js = jsText; // fs.readFileSync(path.resolve(path.dirname(filename), 'graphVisualizer.js'));
+        const writer = fs.createWriteStream('dependency_graph.html');
         if (this.opts.jsOutside) {
-            fs.writeFileSync('dependency_graph.html', generateTemplate(data, `
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'dependency_graph.js';
-            document.getElementsByTagName('head')[0].appendChild(script);
-            `));
-            fs.writeFileSync('dependency_graph.js', js);
+            generateTemplate(data, `
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'dependency_graph.js';
+                document.getElementsByTagName('head')[0].appendChild(script);
+                `, (text) => { writer.write(text) });
+            writer.end();
+            writer.on('finish', () => {
+                fs.writeFileSync('dependency_graph.js', js);
+                callback();
+            });
         } else {
-            fs.writeFileSync('dependency_graph.html', generateTemplate(data, js));
+            generateTemplate(data, js, (text) => writer.write(text));
+            writer.end();
+            writer.on('finish', () => {
+                callback();
+            });
         }
-        
+
     }
 
     removeDuplicates<T extends TItem[], TItem extends Record<TKey, string | number>, TKey extends string>(myArr: T, prop: TKey) {
@@ -71,20 +79,20 @@ export class DependencyGraphWebpackPlugin implements webpack.Plugin {
     }
 
     apply(compiler: webpack.Compiler) {
-      // Specify the event hook to attach to
-      compiler.hooks.afterEmit.tapAsync(
-        'DependencyGraphWebpackPlugin',
-        (compilation, done) => {
-            const stats = compilation.getStats().toJson({
-            maxModules: 99999,
-            modules: true,
-            entrypoints: true,
-            reasons: true,
-            chunks: true,
-            source: true,
-        }, true);
-        this.processData(stats, done);
-        }
-      );
+        // Specify the event hook to attach to
+        compiler.hooks.afterEmit.tapAsync(
+            'DependencyGraphWebpackPlugin',
+            (compilation, done) => {
+                const stats = compilation.getStats().toJson({
+                    maxModules: 99999,
+                    modules: true,
+                    // entrypoints: true,
+                    reasons: true,
+                    // chunks: true,
+                    // source: true,
+                }, true);
+                this.processData(stats, done);
+            }
+        );
     }
-  }
+}

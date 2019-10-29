@@ -1,34 +1,39 @@
 import { DataFormat } from './types';
 
-export const generateTemplate = (data: DataFormat, js: string) => {
-    const head = `
+export const generateTemplate = (data: DataFormat, js: string, stream: (text: string) => void) => {
+    stream(`<html>
+    <head>
     <script>
-        var data = ${JSON.stringify(JSON.stringify(data))};
+    var data = {"nodes":[`);
+    data.nodes.map((mapObj, index) => stream((index == 0 ? '' : ',') + JSON.stringify(mapObj)));
+    stream('],"links":[');
+    data.links.map((mapObj, index) => stream((index == 0 ? '' : ',') + JSON.stringify(mapObj)));
+    stream(`]};
     </script>
     <script>
-        ${js}
+    ${js}
     </script>
     <style>
         line.link {
             fill: none;
-            stroke: #666;
-            stroke-width: 1.5px;
+            stroke: #000;
+            stroke-width: 2px;
+        }
+        line.link.click {
+            cursor: pointer;
+        }
+        line.link.click:hover {
+            stroke-width: 4px;
         }
     </style>
-   `;
-   const body = `
+    </head>`);
+    stream(`
+    <body>
         <header>
             <button onclick="visualizer.default.onlyNodeEntry()">Entry nodes</button>
             <button onclick="visualizer.default.entryCrossNodes()">Cross nodes</button>
         </header>
-        <svg id="visualizer" width="900" height="600"></svg>
-    `;
-   return `<html>
-   <head>
-    ${head}
-   </head>
-   <body>
-    ${body}
+        <div id="visualizer" style="width: 100%; height: 100%;"></div>
    </body>
-   </html>`;
+   </html>`);
 }
