@@ -21,7 +21,7 @@
   "homepage": "https://github.com/martynassimkevicius/webpack-dependency-graph#readme",
   "dependencies": {
     "d3": "^5.9.7",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.19"
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
